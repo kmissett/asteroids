@@ -14,6 +14,7 @@ The game as of the initial commit isn't done. Here is what I still need to do:
 
 Things I might try, once the base game is complete:
 
+* Enemy saucers
 * Player teleport function
 * Game controller as input
 * Two player mode

@@ -1,14 +1,18 @@
+// default constants
 const MAX_RADIUS = 100
+const ASTEROID_AVG_VERTICES = 10
+const ASTEROID_JAGGEDNESS = 0.3
+const SIZE_MULTIPLIER = 0.4
 
 export default class Asteroid {
-    constructor({position, size = 0, avgVertices = 10, jaggedness = 0.3, context, fps = 60}) {
+    constructor({position, size = 0, avgVertices = ASTEROID_AVG_VERTICES, jaggedness = ASTEROID_JAGGEDNESS, context, fps}) {
         this.ctx = context
         this.fps = fps
         this.x = position.x
         this.y = position.y
         this.size = size
         this.speed = Math.pow(1.5, this.size + 1)
-        this.r = Math.ceil(MAX_RADIUS / Math.pow(2.5, this.size))
+        this.r = Math.ceil(MAX_RADIUS * Math.pow(SIZE_MULTIPLIER, this.size))
         this.rotation = Math.PI * 2 * Math.random()
         this.vx = this.speed * Math.random() * (Math.random() < 0.5 ? 1: -1)
         this.vy = this.speed * Math.random() * (Math.random() < 0.5 ? 1: -1)
@@ -43,15 +47,6 @@ export default class Asteroid {
         this.ctx.strokeStyle = "slategray"
         this.ctx.lineWidth = 3
         this.ctx.stroke()
-
-        // development: show bounding circle
-        /* 
-        this.ctx.strokeStyle = "lime"
-        this.ctx.beginPath()
-        this.ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI, false)
-        this.ctx.closePath()
-        this.ctx.stroke()
-         */
     }
 
     update() {

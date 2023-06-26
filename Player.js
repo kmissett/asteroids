@@ -1,10 +1,18 @@
 import Projectile from "./Projectile.js"
 
+// default constants
+const PLAYER_ACCELERATION = 2.25
+const PROJECTILES_MAX_NUMBER = 10
+const PLAYER_SIZE = 20
+const PLAYER_EXPLODE_DURATION = 0.5     // number of seconds of player explosion
+const PLAYER_SHIELDS_DURATION = 3       // number of seconds of player shields
+
+
 export default class Player {
-    constructor({canvas, context, position, velocity = {x:0, y:0}, fps = 60}) {
+    constructor({canvas, context, position, velocity = {x:0, y:0}, fps}) {
         this.canvas = canvas
         this.ctx = context
-        this.size = 20
+        this.size = PLAYER_SIZE
         this.x = position.x
         this.y = position.y
         this.vx = velocity.x
@@ -21,25 +29,25 @@ export default class Player {
 
         // shooting
         this.canShoot = true
-        this.projectilesMax = 10
+        this.projectilesMax = PROJECTILES_MAX_NUMBER
         this.projectiles = []
-        this.projectileSpeed = 10 // pixels per frame
+
 
         // constants
         this.fps = fps
         this.angularSpeed = Math.PI * 2 / this.fps
-        this.acceleration = 2.25 / this.fps
+        this.acceleration = PLAYER_ACCELERATION / this.fps
         this.friction = 1 - this.acceleration
 
 
         // explode timer
-        this.explodeDuration = Math.floor(0.5 * this.fps)
+        this.explodeDuration = Math.floor(PLAYER_EXPLODE_DURATION * this.fps)
         this.explodeTimer = this.explodeDuration
         this.exploding = false
 
         // regeneration after collision
         this.shields = false
-        this.shieldsDuration = 3 * this.fps  // seconds of shields
+        this.shieldsDuration = PLAYER_SHIELDS_DURATION * this.fps  // seconds of shields
         this.shieldsTimer = 0
     }
 
@@ -166,11 +174,11 @@ export default class Player {
                 x: this.x + this.size * Math.cos(this.rotation), 
                 y: this.y + this.size * Math.sin(this.rotation)
             }
-            const speed = this.projectileSpeed
+            
             const angle = this.rotation
             const context = this.ctx
             const fps = this.fps
-            this.projectiles.push(new Projectile({position, speed, angle, context, fps})
+            this.projectiles.push(new Projectile({position, angle, context, fps})
 
             )
         }

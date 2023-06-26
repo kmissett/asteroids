@@ -14,7 +14,7 @@ const ASTEROID_SIZE = 200           // max asteroid size in pixels -- needed for
 
 // create player ship
 
-const player = new Player({position: {x: canvas.width / 2, y:canvas.height / 2}, context: ctx, canvas: canvas})
+const player = new Player({position: {x: canvas.width / 2, y:canvas.height / 2}, context: ctx, canvas: canvas, fps: FPS})
 player.draw()
 
 
@@ -34,7 +34,8 @@ function createAsteroids() {
         while(distBetweenPoints(player.x, player.y, x, y) < ASTEROID_SIZE * 2 + player.size)
         asteroids.push(new Asteroid({
             context: ctx,
-            position:{ x: x, y: y },
+            fps: FPS,
+            position:{ x: x, y: y }
         }))
     }
     return asteroids
@@ -53,15 +54,7 @@ function destroyAsteroid(asteroid) {
                 }))
             }
             break
-/*         case 1:
-            for(let i=0; i < 2; i++) {
-                asteroids.push(new Asteroid({
-                    context: ctx,
-                    position: {x: asteroid.x, y: asteroid.y},
-                    size: 2
-                }))
-            }
-            break */
+
         default:
             break
         
@@ -147,14 +140,7 @@ function updateFrame() {
         asteroid.update()
     }
     
-
-    // remove projectiles after they reach maximum distance
-    for(let i=player.projectiles.length - 1; i >= 0; i--) {
-        const projectile = player.projectiles[i]
-        if (projectile.distance >= projectile.maxDistance) {
-            player.projectiles.splice(i,1)
-        }
-    }
+    
 
     // detect collisions of projectiles with asteroids
     for(let i=asteroids.length - 1; i>=0; i--) {
@@ -171,11 +157,22 @@ function updateFrame() {
             const py = projectile.y
 
             if(distBetweenPoints(ax,ay,px,py) < ar) {
-                player.projectiles.splice(j,1)
+
+                projectile.explode()
                 destroyAsteroid(asteroid)
-                // asteroids.splice(i,1)
+                
                 break
             }
+
+            if (projectile.explodeTimer === 0) {player.projectiles.splice(j,1)}
+        }
+    }
+
+    // remove projectiles after maximum time
+    for(let i=player.projectiles.length - 1; i >= 0; i--) {
+        const projectile = player.projectiles[i]
+        if (projectile.numFrames >= projectile.maxTime) {
+            player.projectiles.splice(i,1)
         }
     }
 
