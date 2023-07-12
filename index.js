@@ -23,10 +23,10 @@ let asteroids = []
 createAsteroids()
 asteroids.forEach(asteroid => asteroid.draw())
 
-function createAsteroids() {
+function createAsteroids(currentLevel=0) {
     asteroids = []
     let x,y
-    for (let i = 0; i < ASTEROID_NUM; i++) {
+    for (let i = 0; i < ASTEROID_NUM + currentLevel; i++) {
         do {
             x = Math.floor(Math.random() * canvas.width)
             y = Math.floor(Math.random() * canvas.height)
@@ -35,7 +35,8 @@ function createAsteroids() {
         asteroids.push(new Asteroid({
             context: ctx,
             fps: FPS,
-            position:{ x: x, y: y }
+            position:{ x: x, y: y },
+            level: currentLevel
         }))
     }
     return asteroids
@@ -50,7 +51,8 @@ function destroyAsteroid(asteroid) {
                 asteroids.push(new Asteroid({
                     context: ctx,
                     position: {x: asteroid.x, y: asteroid.y},
-                    size: asteroid.size + 1
+                    size: asteroid.size + 1,
+                    level: asteroid.level
                 }))
             }
             break
